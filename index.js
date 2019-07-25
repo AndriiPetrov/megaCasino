@@ -13,7 +13,7 @@ class GameMachine {
 
   getMoneyFromMachine(number) {
     if (this.machineMoney - number >= 0) {
-      this.machineMoney -= numbrer;
+      this.machineMoney -= number;
       return number;
     } else {
       let moneyToReturn = this.machineMoney;
@@ -70,17 +70,24 @@ class Casino {
 }
 
 class User {
-  conustructor(name, money) {
+  constructor(name, money) {
     this.name = name;
     this.money = money;
   }
 
   play(money) {
-    if(money < 0 || money === 'undefined') {
+    if (this.money - money < 0) {
+      money = this.money;
+    }
+    if (this.money === 0) {
+      return 'You don\'t have money to play';
+    } else if (this.money < 0 || this.moneymoney === 'undefined') {
       return 'You owe us money';
     } else {
+      this.money -= money;
       let numberOfMachine = Math.floor(Math.random() * arrayOfMachines.length);
-      return arrayOfMachines[numberOfMachine].play(money);
+      money = arrayOfMachines[numberOfMachine].play(money);
+      return this.money += money;
     }
   }
 }
@@ -124,7 +131,7 @@ class SuperAdmin extends User {
     }
   }
   putMoneyToCasino(number) {
-    casinoMoney += number;
+    return casinoMoney += number;
   }
   deleteMachine(number) {
     let money = arrayOfMachines[number - 1].getMoneyFromMachine(Number.MAX_SAFE_INTEGER);
@@ -137,6 +144,7 @@ class SuperAdmin extends User {
 }
 
 let admin = new SuperAdmin('Andrii', 1000000);
+let user = new User('SomeOne', 1000);
 console.log(admin);
 console.log(admin.createNewCasino('Casino'));
 console.log(admin.createNewMachine());
@@ -148,3 +156,8 @@ console.log(admin.deleteMachine(3));
 console.log(arrayOfMachines[1].getMoney)
 console.log(casino.getMachineCount)
 console.log(admin.play(10));
+console.log(admin.takeMoneyFromCasino(1000));
+console.log(casinoMoney);
+console.log(admin.putMoneyToCasino(10000));
+console.log(user.play(1000));
+console.log(user.play(1000));
