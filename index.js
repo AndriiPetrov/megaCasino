@@ -76,11 +76,11 @@ class User {
   }
 
   play(money) {
-    if(money < 0 || mmoney === 'undefined') {
+    if(money < 0 || money === 'undefined') {
       return 'You owe us money';
     } else {
       let numberOfMachine = Math.floor(Math.random() * arrayOfMachines.length);
-      return arrayOfMachines[numberOfMachine];
+      return arrayOfMachines[numberOfMachine].play(money);
     }
   }
 }
@@ -91,20 +91,19 @@ class SuperAdmin extends User {
   }
 
   createNewCasino(name) {
-    casino = new Casino(name);
+    return casino = new Casino(name);
   }
   createNewMachine() {
-    let number = casino.getMoney() / (arrayOfMachines.lenght + 1);
-    
-    if (arrayOfMachines.length > 0) {
-      for (let i = 0; i < arrayOfMachines.length; i++) {
-        casinoMoney += arrayOfMachines[i].getMoneyFromMachine(Number.MAX_VALUE);
+    let number = parseInt(casino.getMoney / (casino.getMachineCount + 1));
+
+    if (casino.getMachineCount > 0) {
+      for (let i = 0; i < casino.getMachineCount; i++) {
+        arrayOfMachines[i].getMoneyFromMachine(Number.MAX_SAFE_INTEGER);
         arrayOfMachines[i].putMoney(number);
-        casinoMoney -= number;
       }
     }
 
-    arrayOfMachines[arrayOfMachines.lenght] = new GameMachine(number);
+    return arrayOfMachines[arrayOfMachines.length] = new GameMachine(number);
   }
   takeMoneyFromCasino(number) {
     let money = 0;
@@ -126,18 +125,26 @@ class SuperAdmin extends User {
   }
   putMoneyToCasino(number) {
     casinoMoney += number;
-    for (let i = 0; i < arrayOfMachines.length; i++) {
-      casinoMoney += arrayOfMachines[i].getMoneyFromMachine(Number.MAX_VALUE);
-      arrayOfMachines[i].putMoney(number);
-      casinoMoney -= number;
-    }
   }
   deleteMachine(number) {
-    let money = arrayOfMachines[number - 1].getMoneyFromMachine(Number.MAX_VALUE);
+    let money = arrayOfMachines[number - 1].getMoneyFromMachine(Number.MAX_SAFE_INTEGER);
     arrayOfMachines.splice(number - 1, 1);
     money /= arrayOfMachines.length;
-    for (let i = 0; i < arrayOfMachines.lenght; i++) {
+    for (let i = 0; i < arrayOfMachines.length; i++) {
       arrayOfMachines[i].putMoney(money);
     } 
   }
 }
+
+let admin = new SuperAdmin('Andrii', 1000000);
+console.log(admin);
+console.log(admin.createNewCasino('Casino'));
+console.log(admin.createNewMachine());
+console.log(admin.createNewMachine());
+console.log(admin.createNewMachine());
+console.log(admin.createNewMachine());
+console.log(admin.createNewMachine());
+console.log(admin.deleteMachine(3));
+console.log(arrayOfMachines[1].getMoney)
+console.log(casino.getMachineCount)
+console.log(admin.play(10));
