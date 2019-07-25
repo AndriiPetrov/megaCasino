@@ -1,49 +1,6 @@
 let casinoMoney = 1000000;
 let arrayOfMachines = [];
-let casino;
-
-class SuperAdmin extends User {
-  constructor(name, money) {
-    super(name, money)
-  }
-
-  createNewCasino(name) {
-    casino = new Casino(name);
-  }
-  createNewMachine() {
-    let number = casinoMoney / (arrayOfMachines.lenght + 1);
-    arrayOfMachines[arrayOfMachines.lenght] = new GameMachine(number);
-  }
-}
-
-class User {
-  conustructor(name, money) {
-    this.name = name;
-    this.money = money;
-  }
-
-  play(money) {
-    if(money < 0) {
-      return 'You owe us money';
-    } else {
-      let numberOfMachine = Math.floor(Math.random() * arrayOfMachines.length);
-      return arrayOfMachines[numberOfMachine]
-    }
-  }
-}
-
-class Casino {
-  constructor(name) {
-    this.name = name;
-  }
-
-  get getMoney() {
-    return casinoMoney;
-  }
-  get getMachineCount() {
-    return arrayOfMachines.length;
-  }
-}
+let casino = null;
 
 class GameMachine {
   constructor(money) {
@@ -96,5 +53,91 @@ class GameMachine {
     } else {
       return 0;
     }
+  }
+}
+
+class Casino {
+  constructor(name) {
+    this.name = name;
+  }
+
+  get getMoney() {
+    return casinoMoney;
+  }
+  get getMachineCount() {
+    return arrayOfMachines.length;
+  }
+}
+
+class User {
+  conustructor(name, money) {
+    this.name = name;
+    this.money = money;
+  }
+
+  play(money) {
+    if(money < 0 || mmoney === 'undefined') {
+      return 'You owe us money';
+    } else {
+      let numberOfMachine = Math.floor(Math.random() * arrayOfMachines.length);
+      return arrayOfMachines[numberOfMachine];
+    }
+  }
+}
+
+class SuperAdmin extends User {
+  constructor(name, money) {
+    super(name, money)
+  }
+
+  createNewCasino(name) {
+    casino = new Casino(name);
+  }
+  createNewMachine() {
+    let number = casino.getMoney() / (arrayOfMachines.lenght + 1);
+    
+    if (arrayOfMachines.length > 0) {
+      for (let i = 0; i < arrayOfMachines.length; i++) {
+        casinoMoney += arrayOfMachines[i].getMoneyFromMachine(Number.MAX_VALUE);
+        arrayOfMachines[i].putMoney(number);
+        casinoMoney -= number;
+      }
+    }
+
+    arrayOfMachines[arrayOfMachines.lenght] = new GameMachine(number);
+  }
+  takeMoneyFromCasino(number) {
+    let money = 0;
+    arrayOfMachines.sort( (a, b) => b - a);
+    for (let i = 0; i < arrayOfMachines.length; i++) {
+      money += arrayOfMachines[i].getMoneyFromMachine(number);
+      if (number === money) {
+        casinoMoney -= number;
+        return number;
+      } else if ( money < number) {
+        continue;
+      } else if (money > number) {
+        money -= number;
+        arrayOfMachines[i].putMoney(money);
+        casinoMoney -= number;
+        return number;
+      }
+    }
+  }
+  putMoneyToCasino(number) {
+    casinoMoney += number;
+    for (let i = 0; i < arrayOfMachines.length; i++) {
+      casinoMoney += arrayOfMachines[i].getMoneyFromMachine(Number.MAX_VALUE);
+      arrayOfMachines[i].putMoney(number);
+      casinoMoney -= number;
+    }
+  }
+  deleteMachine(number) {
+    let money = arrayOfMachines[number - 1].getMoneyFromMachine(Number.MAX_VALUE);
+    arrayOfMachines.splice(number - 1, 1);
+    money /= arrayOfMachines.length;
+    for (let i = 0; i < arrayOfMachines.lenght; i++) {
+      arrayOfMachines[i].putMoney(money);
+    } 
   }
 }
